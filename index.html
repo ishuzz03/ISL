@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mudra — Real-time Indian Sign Language Translator</title>
+  <meta name="description" content="Translate Indian Sign Language gestures to text in real time using your webcam and hand-landmark tracking." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700;800&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip" href="#main">Skip to translator</a>
+  <header class="top">
+    <div class="brand"><span class="logo" aria-hidden="true">✋</span><span>Mudra<small>ISL Translator</small></span></div>
+    <div class="status" id="status" role="status" aria-live="polite"><span class="dot"></span><span id="statusText">Camera off</span></div>
+  </header>
+
+  <main id="main" class="layout">
+    <section class="stage card" aria-label="Live camera">
+      <div class="video-wrap" id="videoWrap">
+        <video id="video" playsinline muted aria-label="Live webcam preview"></video>
+        <canvas id="overlay" aria-hidden="true"></canvas>
+        <div class="placeholder" id="placeholder">
+          <p class="big">Show your hands to the camera</p>
+          <p>Press <strong>Start camera</strong> to begin translating. Video never leaves your device.</p>
+        </div>
+        <div class="caption" id="caption" aria-live="assertive"><span id="captionWord">—</span></div>
+      </div>
+      <div class="controls">
+        <button class="btn primary" id="startBtn">▶ Start camera</button>
+        <button class="btn" id="stopBtn" disabled>■ Stop camera</button>
+        <label class="toggle"><input type="checkbox" id="showLandmarks" checked /> Show landmarks</label>
+        <label class="toggle"><input type="checkbox" id="mirror" checked /> Mirror</label>
+        <label class="toggle"><input type="checkbox" id="speak" /> Speak words</label>
+      </div>
+    </section>
+
+    <aside class="side">
+      <section class="card detect" aria-label="Current detection">
+        <h2>Detected sign</h2>
+        <p class="word" id="word">—</p>
+        <div class="meter" role="meter" aria-label="Confidence" aria-valuemin="0" aria-valuemax="100" id="meter">
+          <div class="bar" id="bar"></div>
+        </div>
+        <p class="meta"><span id="conf">0%</span> confidence · <span id="engine">Engine: rules</span> · <span id="fps">0 fps</span></p>
+      </section>
+
+      <section class="card" aria-label="Detected word history">
+        <div class="row"><h2>History</h2><div>
+          <button class="btn small" id="copyBtn">Copy</button>
+          <button class="btn small" id="clearBtn">Clear</button></div></div>
+        <p class="sentence" id="sentence" aria-live="polite">Your sentence will appear here.</p>
+        <ol class="history" id="history"></ol>
+      </section>
+
+      <section class="card" aria-label="Sample collection">
+        <h2>Collect samples</h2>
+        <p class="hint">Teach custom signs. Hold a sign, then record. With 2+ labels, your samples power a on-device nearest-neighbour model.</p>
+        <div class="row">
+          <input id="label" placeholder="Label, e.g. NAMASTE" aria-label="Sign label" />
+          <button class="btn primary small" id="recordBtn">● Record 30</button>
+        </div>
+        <ul class="samples" id="samples"></ul>
+        <div class="row">
+          <button class="btn small" id="exportBtn">Export JSON</button>
+          <label class="btn small file">Import<input type="file" id="importFile" accept="application/json" hidden /></label>
+          <button class="btn small" id="resetSamples">Reset</button>
+        </div>
+      </section>
+
+      <section class="card legend" aria-label="Built-in signs">
+        <h2>Built-in signs</h2>
+        <ul id="legend"></ul>
+      </section>
+    </aside>
+  </main>
+
+  <footer class="foot">Hand tracking by MediaPipe · Plug in your own model in <code>js/app.js (Predictors section)</code></footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
